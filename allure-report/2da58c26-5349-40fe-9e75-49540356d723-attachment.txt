@@ -1,0 +1,7 @@
+No Bluetooth Warning popup found. Continuing test.
+No App Crash popup found. Continuing test.
+Permission popup not found within timeout, continuing the test.
+Biometric Popup Found
+File element found. Clicking...
+Toaster Message disappeared?: True
+Songboard name is: Songboard_24

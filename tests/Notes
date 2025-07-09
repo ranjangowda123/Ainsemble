@@ -1,0 +1,22 @@
+1. Prefer id and accessibility id — they are the fastest and most stable.
+2. Avoid complex xpath unless nothing else works.
+3. Use uiautomator only if you need special filtering like .clickable(true).textContains("...").
+
+
+4.Common strategies people use to handle OTPs (especially those sent via email or SMS) in automation:
+    1.Access Email Programmatically to Read OTP
+    2. Use Test Environment with Mocked OTPs
+    3. Use API Testing Instead of UI for OTP -
+    4. Intercept OTP SMS/Email Using Third-party Tools
+    5. Ask Developers to Add Test Hooks
+
+5. Ways to Handel StaleElement expection
+   1. Always Re-locate the Element Just Before Use
+   2. Use Explicit Waits Instead of Implicit Waits
+   3. Retry Logic (Graceful Recovery)
+   4. Use element_to_be_clickable() Instead of Just Finding
+
+
+6. elements = driver.find_elements(AppiumBy.ID, "android:id/title")
+   for el in elements:
+        print(el.text)
