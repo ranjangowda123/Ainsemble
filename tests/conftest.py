@@ -1,7 +1,6 @@
 import os
 import shutil
 import subprocess
-
 import pytest
 from appium import webdriver
 from appium.options.android import UiAutomator2Options
@@ -52,3 +51,15 @@ def pytest_runtest_makereport(item, call):
                 driver.get_screenshot_as_png(),
                 name=f"Failure Screenshot - {time_stamp}",
                 attachment_type=allure.attachment_type.PNG)
+
+
+# Delete previous allure report
+
+def pytest_sessionstart(session):
+    print("Cleaning allure-report folder before starting tests...")
+    # 	Tells Python: we’re targeting the allure-report/ folder.
+    report_dir = "allure-report"
+    # Checks if that folder exists locally.
+    if os.path.exists(report_dir):
+        # If yes → it deletes the entire folder and its contents recursively.
+        shutil.rmtree(report_dir)
