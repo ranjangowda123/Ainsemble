@@ -1,12 +1,10 @@
 import os
 import shutil
-import subprocess
 import pytest
 from appium import webdriver
 from appium.options.android import UiAutomator2Options
 import allure
 from datetime import datetime
-from applitools.selenium import Eyes
 
 
 @pytest.fixture(scope="function")     # To start the Appium driver before each test and close it after.
@@ -54,7 +52,6 @@ def pytest_runtest_makereport(item, call):
 
 
 # Delete previous allure report
-
 def pytest_sessionstart(session):
     print("Cleaning allure-report folder before starting tests...")
     # 	Tells Python: we’re targeting the allure-report/ folder.
