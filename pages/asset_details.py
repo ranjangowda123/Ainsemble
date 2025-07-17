@@ -21,7 +21,7 @@ class AssetDetails:
         wait_for_click_element(self.driver,AppiumBy.XPATH,self.tick_mark)
 
     def songboard_name(self):
-        songboardname1 = f"Songboard_{random.randint(1,999)}"
+        songboardname1 = f"Songboard_{random.randint(1,9999)}"
         print("Songboard name is:",songboardname1)
         wait_only_for_element(self.driver,AppiumBy.CLASS_NAME,self.sb_name).send_keys(songboardname1)
         time.sleep(2)

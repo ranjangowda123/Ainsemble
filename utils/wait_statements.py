@@ -16,3 +16,6 @@ def wait_until_not_presence_of_element(driver,by,locator,timeout=30):
 
 def wait_for_presence_of_element(driver,by,locator,timeout=30):
     return WebDriverWait(driver, timeout).until(expected_conditions.presence_of_element_located((by,locator)))
+
+def wait_for_visibility_of_element(driver,by,locator,timeout=30):
+    return WebDriverWait(driver, timeout).until(expected_conditions.visibility_of_element_located((by,locator)))

@@ -23,7 +23,7 @@ with open(json_path,encoding='utf-8') as f:  # ensures your file is read safely,
 # @allure.severity(allure.severity_level.CRITICAL)
 @allure.title("Create new songboard and upload file")
 @allure.description("This test logs in, navigates to songboard, and uploads a file. It validates that the flow works without crashes.")
-def test_asset_creation(driver):
+def test_songboard_creation(driver):
     # Attaches (test_data.json) as a downloadable section in the Allure report.
     # we can see exactly which email, password, filename, or any other test data was used in that test run — without opening any external files.
     with allure.step("Attach test input data"):
@@ -85,4 +85,6 @@ def test_asset_creation(driver):
         songboardlist.choose_created_songboards(name)
     with allure.step(f"Scroll and view created songboard: {name})"):
         save_sb.choose_created_songboard(file_names)
+
+
 

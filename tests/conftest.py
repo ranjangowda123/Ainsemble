@@ -1,3 +1,4 @@
+import json
 import os
 import shutil
 import pytest
@@ -51,12 +52,111 @@ def pytest_runtest_makereport(item, call):
                 attachment_type=allure.attachment_type.PNG)
 
 
-# Delete previous allure report
+# Delete previous Allure report and add environment.properties
 def pytest_sessionstart(session):
-    print("Cleaning allure-report folder before starting tests...")
-    # 	Tells Python: we’re targeting the allure-report/ folder.
-    report_dir = "allure-report"
-    # Checks if that folder exists locally.
+    print("Cleaning allure-results folder before starting tests...")
+    report_dir = "allure-results"
+
     if os.path.exists(report_dir):
-        # If yes → it deletes the entire folder and its contents recursively.
         shutil.rmtree(report_dir)
+        print("Previous Allure report deleted.")
+
+    os.makedirs(report_dir, exist_ok=True)
+    print("New Allure report created.")
+
+    # Add environment.properties
+    env_file = os.path.join(report_dir, "environment.properties")
+    with open(env_file, "w") as f:
+        f.write("Browser=Chrome\n")
+        f.write("Environment=Dev\n")
+        f.write("Platform=Android\n")
+        f.write("Teseter=Ranjan\n")
+    print("environment.properties created.")
+
+    # Create categories.json
+    categories =[
+  {
+    "name": "Element Not Found",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*NoSuchElementException.*"
+  },
+  {
+    "name": "Timeout Error",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*TimeoutException.*"
+  },
+  {
+    "name": "Assertion Failure",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*AssertionError.*"
+  },
+  {
+    "name": "Invalid Selector",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*InvalidSelectorException.*"
+  },
+  {
+    "name": "Session Error",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*SessionNotCreatedException.*"
+  },
+  {
+    "name": "Stale Element",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*StaleElementReferenceException.*"
+  },
+  {
+    "name": "Element Not Interactable",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*ElementNotInteractableException.*"
+  },
+  {
+    "name": "Index Error",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*IndexError.*"
+  },
+  {
+    "name": "Key Error",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*KeyError.*"
+  },
+  {
+    "name": "Value Error",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*ValueError.*"
+  },
+  {
+    "name": "Connection Error",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*ConnectionRefusedError.*"
+  },
+  {
+    "name": "Broken Test",
+    "matchedStatuses": ["broken"]
+  },
+  {
+    "name": "Unexpected Alert",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*UnexpectedAlertPresentException.*"
+  },
+  {
+    "name": "Generic Failure",
+    "matchedStatuses": ["failed"]
+  }
+]
+    categories_file = os.path.join(report_dir, "categories.json")
+    with open(categories_file, "w") as f:
+        json.dump(categories, f, indent=4)
+    print("categories.json created.")
+
+    # Executor for allure
+    executor_data = {
+        "name": "LocalRun",
+        "type": "python",
+        "buildName": "Mobile Automation Test",
+        "reportUrl": "http://localhost:5050/allure",
+        "buildOrder": 1
+    }
+
+    with open("allure-results/executor.json", "w") as f:
+        json.dump(executor_data, f, indent=2)
