@@ -3,12 +3,12 @@ name: Mobile_Tests_CICD
 on:
   push:
     branches:
-      - main          # Trigger on this branch
-  workflow_dispatch:  # Optional manual trigger
+      - main
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
@@ -24,24 +24,24 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Start Android Emulator Headless
-        run: |
-          echo Starting emulator...
-          start /B emulator -avd "Pixel_9_Pro_XL" -no-window -no-audio -no-boot-anim
-          echo Waiting for emulator to boot...
-          adb wait-for-device
-          timeout /T 30
+      - name: Start Android Emulator + Run Tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          target: google_apis
+          arch: x86_64
+          profile: pixel
+          script: |
+            adb devices
+            adb install path/to/your.apk
+            adb shell am start -n com.example/.MainActivity
 
-      - name: Start Appium Server
-        run: |
-          echo Starting Appium server...
-          start /B appium
-          timeout /T 10
+            echo Starting Appium server...
+            nohup appium > appium.log 2>&1 &   # ✅ CORRECT way to start Appium in background on Linux
+            sleep 10                           # ✅ wait for appium to fully start
 
-      - name: Run Mobile Tests with Allure results
-        continue-on-error: true
-        run: |
-          pytest --alluredir=allure-results --maxfail=1 --disable-warnings
+            echo Running tests...
+            pytest --alluredir=allure-results --maxfail=1 --disable-warnings
 
       - name: Generate Allure Report
         run: |
