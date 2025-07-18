@@ -1,0 +1,54 @@
+name: Mobile_Tests_CICD
+
+on:
+  push:
+    branches:
+      - main          # Trigger on this branch
+  workflow_dispatch:  # Optional manual trigger
+
+jobs:
+  build:
+    runs-on: self-hosted  # Use your local machine
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.13.2'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Start Android Emulator Headless
+        run: |
+          echo Starting emulator...
+          start /B emulator -avd Pixel 9 Pro XL -no-window -no-audio -no-boot-anim
+          echo Waiting for emulator to boot...
+          adb wait-for-device
+          timeout /T 20
+
+      - name: Start Appium Server
+        run: |
+          echo Starting Appium server...
+          start /B appium
+          timeout /T 10
+
+      - name: Run Mobile Tests with Allure results
+        continue-on-error: true
+        run: |
+          pytest --alluredir=allure-results --maxfail=1 --disable-warnings
+
+      - name: Generate Allure Report
+        run: |
+          allure generate allure-results --clean -o allure-report
+
+      - name: Upload Allure HTML Report as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: allure-report
