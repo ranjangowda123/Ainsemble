@@ -27,10 +27,10 @@ jobs:
       - name: Start Android Emulator Headless
         run: |
           echo Starting emulator...
-          start /B emulator -avd Pixel 9 Pro XL -no-window -no-audio -no-boot-anim
+          start /B emulator -avd "Pixel_9_Pro_XL" -no-window -no-audio -no-boot-anim
           echo Waiting for emulator to boot...
           adb wait-for-device
-          timeout /T 20
+          timeout /T 30
 
       - name: Start Appium Server
         run: |
